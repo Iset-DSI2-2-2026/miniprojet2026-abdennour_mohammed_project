@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ titre_page }}{% endblock %}
+{% block page_title %}{{ titre_page }}{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_row(form.titre) }}
+    {{ form_row(form.resume) }}
+    {{ form_row(form.isbn) }}
+    {{ form_row(form.nbPages) }}
+    {{ form_row(form.datePublication) }}
+    {{ form_row(form.disponible) }}
+    {{ form_row(form.auteur) }}
+    {{ form_row(form.genre) }}
+    {{ form_row(form.tags) }}
+    {{ form_row(form.imageFile) }}
+    <div class="mt-3">{{ form_row(form.save) }}</div>
+    {{ form_end(form) }}
+{% endblock %}

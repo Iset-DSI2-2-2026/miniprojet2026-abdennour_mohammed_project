@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ma liste de lecture{% endblock %}
+{% block page_title %}Ma liste de lecture{% endblock %}
+
+{% block body %}
+    <div class="card">
+        <div class="card-body table-responsive p-0">
+            <table class="table table-striped mb-0">
+                <thead>
+                <tr><th>Titre</th><th>Auteur</th><th></th></tr>
+                </thead>
+                <tbody>
+                {% for livre in livres %}
+                    <tr>
+                        <td><a href="{{ path('app_livre_show', {id: livre.id}) }}">{{ livre.titre }}</a></td>
+                        <td>{{ livre.auteur }}</td>
+                        <td class="text-end">
+                            <form method="post" action="{{ path('app_ma_liste_retirer', {id: livre.id}) }}" data-swal-confirm="Retirer ce livre de votre liste ?">
+                                <input type="hidden" name="_token" value="{{ csrf_token('ma_liste_remove' ~ livre.id) }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">❌</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="3" class="text-center text-muted">Votre liste est vide.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

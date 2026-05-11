@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tags{% endblock %}
+{% block page_title %}Tags{% endblock %}
+
+{% block body %}
+    <p><a href="{{ path('app_tag_nouveau') }}" class="btn btn-primary">Nouveau tag</a></p>
+    <div class="card">
+        <div class="card-body table-responsive p-0">
+            <table class="table table-striped mb-0">
+                <thead>
+                <tr><th>Nom</th><th>Couleur</th><th></th></tr>
+                </thead>
+                <tbody>
+                {% for tag in tags %}
+                    <tr>
+                        <td>{{ tag.nom }}</td>
+                        <td><span class="badge" style="background-color: {{ tag.couleur }}; color:#fff;">{{ tag.couleur }}</span></td>
+                        <td class="text-end">
+                            <form method="post" action="{{ path('app_tag_supprimer', {id: tag.id}) }}" class="d-inline" data-swal-confirm="Supprimer ce tag ?">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete_tag' ~ tag.id) }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">❌</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}

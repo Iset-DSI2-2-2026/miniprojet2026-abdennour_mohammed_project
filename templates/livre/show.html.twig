@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ livre.titre }}{% endblock %}
+{% block page_title %}{{ livre.titre }}{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-4">
+            {% if livre.imageName %}
+                <img class="img-fluid rounded shadow" src="{{ asset('uploads/livres/' ~ livre.imageName) }}" alt="Couverture">
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <p class="lead">{{ livre.resume }}</p>
+            <dl class="row">
+                <dt class="col-sm-3">Auteur</dt>
+                <dd class="col-sm-9">{{ livre.auteur }}</dd>
+                <dt class="col-sm-3">Genre</dt>
+                <dd class="col-sm-9"><span class="badge" style="background-color: {{ livre.genre.couleur }}; color:#fff;">{{ livre.genre.nom }}</span></dd>
+                <dt class="col-sm-3">ISBN</dt>
+                <dd class="col-sm-9">{{ livre.isbn }}</dd>
+                <dt class="col-sm-3">Pages</dt>
+                <dd class="col-sm-9">{{ livre.nbPages }} — {{ livre.nbPages|reading_time }}</dd>
+                <dt class="col-sm-3">Publication</dt>
+                <dd class="col-sm-9">{{ livre.datePublication|date('d/m/Y') }} ({{ livre.datePublication|time_ago }})</dd>
+                <dt class="col-sm-3">Disponibilité</dt>
+                <dd class="col-sm-9">{{ book_status_badge(livre.disponible) }}</dd>
+                <dt class="col-sm-3">Tags</dt>
+                <dd class="col-sm-9">
+                    {% for tag in livre.tags %}
+                        <span class="badge me-1" style="background-color: {{ tag.couleur }}; color:#fff;">{{ tag.nom }}</span>
+                    {% endfor %}
+                </dd>
+            </dl>
+            <a class="btn btn-outline-secondary" href="{{ path('app_livre_index') }}">Retour</a>
+            <a class="btn btn-primary" href="{{ path('app_ma_liste_ajouter', {id: livre.id}) }}">📖 Ajouter à ma liste</a>
+            {% if is_granted('LIVRE_EDIT', livre) %}
+                <a class="btn btn-warning" href="{{ path('app_livre_modifier', {id: livre.id}) }}">Modifier</a>
+            {% endif %}
+            {% if is_granted('LIVRE_DELETE', livre) %}
+                <form class="d-inline" method="post" action="{{ path('app_livre_supprimer', {id: livre.id}) }}" data-swal-confirm="Supprimer ce livre ?">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ livre.id) }}">
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

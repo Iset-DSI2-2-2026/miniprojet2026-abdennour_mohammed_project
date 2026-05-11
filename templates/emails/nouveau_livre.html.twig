@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Nouveau livre</title>
+</head>
+<body style="font-family: sans-serif; line-height: 1.5;">
+<h1>Nouveau livre sur BookShelf</h1>
+<p><strong>Titre :</strong> {{ livre.titre }}</p>
+<p><strong>Auteur :</strong> {{ livre.auteur }}</p>
+<p><strong>Genre :</strong> {{ livre.genre.nom }}</p>
+<p><strong>ISBN :</strong> {{ livre.isbn }}</p>
+<p><strong>Pages :</strong> {{ livre.nbPages }}</p>
+<p><strong>Ajouté par :</strong>
+    {% if utilisateur %}
+        {{ utilisateur.pseudo }} ({{ utilisateur.email }})
+    {% else %}
+        inconnu
+    {% endif %}
+</p>
+</body>
+</html>

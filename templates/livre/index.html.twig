@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Livres{% endblock %}
+{% block page_title %}Catalogue des livres{% endblock %}
+
+{% block body %}
+    <div class="card mb-3">
+        <div class="card-header"><strong>Recherche avancée</strong></div>
+        <div class="card-body">
+            {{ form_start(filterForm, {'action': path('app_livre_index'), 'method': 'GET', 'attr': {'data-turbo': 'false'}}) }}
+            <div class="row g-2 align-items-end">
+                <div class="col-md-3">{{ form_row(filterForm.titre) }}</div>
+                <div class="col-md-3">{{ form_row(filterForm.genre) }}</div>
+                <div class="col-md-2">{{ form_row(filterForm.disponible) }}</div>
+                <div class="col-md-3">{{ form_row(filterForm.tag) }}</div>
+                <div class="col-md-1">
+                    <button type="submit" class="btn btn-primary w-100">Filtrer</button>
+                </div>
+            </div>
+            {{ form_end(filterForm) }}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h3 class="card-title mb-0">Liste ({{ livres.totalItemCount }} résultat(s))</h3>
+            {% if is_granted('ROLE_BIBLIOTHECAIRE') %}
+                <a href="{{ path('app_livre_nouveau') }}" class="btn btn-sm btn-success">Nouveau livre</a>
+            {% endif %}
+        </div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-hover table-striped mb-0">
+                <thead>
+                <tr>
+                    <th style="width:72px"></th>
+                    <th>{{ knp_pagination_sortable(livres, 'Titre', 'l.titre') }}</th>
+                    <th>Auteur</th>
+                    <th>Genre</th>
+                    <th>{{ knp_pagination_sortable(livres, 'Pages', 'l.nbPages') }}</th>
+                    <th>{{ knp_pagination_sortable(livres, 'Publication', 'l.datePublication') }}</th>
+                    <th>Tags</th>
+                    <th>Disponibilité</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for livre in livres %}
+                    <tr>
+                        <td>
+                            {% if livre.imageName %}
+                                <img src="{{ asset('uploads/livres/' ~ livre.imageName) }}" alt="" class="img-thumbnail" style="max-height:56px">
+                            {% else %}
+                                <span class="text-muted small">—</span>
+                            {% endif %}
+                        </td>
+                        <td><a href="{{ path('app_livre_show', {id: livre.id}) }}">{{ livre.titre }}</a></td>
+                        <td>{{ livre.auteur }}</td>
+                        <td><span class="badge" style="background-color: {{ livre.genre.couleur }}; color: #fff;">{{ livre.genre.nom }}</span></td>
+                        <td>{{ livre.nbPages }} <span class="text-muted small">({{ livre.nbPages|reading_time }})</span></td>
+                        <td>{{ livre.datePublication|date('d/m/Y') }} <span class="text-muted small">({{ livre.datePublication|time_ago }})</span></td>
+                        <td>
+                            {% for tag in livre.tags %}
+                                <span class="badge me-1" style="background-color: {{ tag.couleur }}; color:#fff;">{{ tag.nom }}</span>
+                            {% endfor %}
+                        </td>
+                        <td>{{ book_status_badge(livre.disponible) }}</td>
+                        <td class="text-end text-nowrap">
+                            {% if is_granted('LIVRE_EDIT', livre) %}
+                                <a class="btn btn-sm btn-outline-primary" href="{{ path('app_livre_modifier', {id: livre.id}) }}">Modifier</a>
+                            {% endif %}
+                            {% if is_granted('LIVRE_DELETE', livre) %}
+                                <form class="d-inline" method="post" action="{{ path('app_livre_supprimer', {id: livre.id}) }}" data-swal-confirm="Supprimer ce livre ?">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ livre.id) }}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="9" class="text-center text-muted">Aucun livre.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">{{ knp_pagination_render(livres) }}</div>
+    </div>
+{% endblock %}

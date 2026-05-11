@@ -1,0 +1,81 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Accueil{% endblock %}
+{% block page_title %}Tableau de bord{% endblock %}
+
+{% block body %}
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="small-box text-bg-primary">
+                <div class="inner">
+                    <h3>{{ stats.totalLivres }}</h3>
+                    <p>Livres</p>
+                </div>
+                <div class="icon"><i class="bi bi-book"></i></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="small-box text-bg-success">
+                <div class="inner">
+                    <h3>{{ stats.livresDisponibles }}</h3>
+                    <p>Disponibles</p>
+                </div>
+                <div class="icon"><i class="bi bi-check-circle"></i></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="small-box text-bg-info">
+                <div class="inner">
+                    <h3>{{ stats.tempsLectureTotal|number_format(1, ',', ' ') }} h</h3>
+                    <p>Temps de lecture estimé</p>
+                </div>
+                <div class="icon"><i class="bi bi-clock-history"></i></div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="small-box text-bg-warning">
+                <div class="inner">
+                    <h3>{{ stats.livresParGenre|length }}</h3>
+                    <p>Genres représentés</p>
+                </div>
+                <div class="icon"><i class="bi bi-tags"></i></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header"><h3 class="card-title">Livres par genre</h3></div>
+                <div class="card-body p-0">
+                    <table class="table table-striped mb-0">
+                        <tbody>
+                        {% for nom, cnt in stats.livresParGenre %}
+                            <tr><td>{{ nom }}</td><td class="text-end">{{ cnt }}</td></tr>
+                        {% else %}
+                            <tr><td colspan="2">Aucune donnée</td></tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header"><h3 class="card-title">Derniers ajouts</h3></div>
+                <div class="card-body">
+                    <ul class="list-unstyled mb-0">
+                        {% for livre in derniersLivres %}
+                            <li class="mb-2">
+                                <a href="{{ path('app_livre_show', {id: livre.id}) }}">{{ livre.titre }}</a>
+                                <span class="text-muted small">— {{ livre.nbPages|reading_time }} · {{ livre.datePublication|time_ago }}</span>
+                            </li>
+                        {% else %}
+                            <li>Aucun livre pour le moment.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

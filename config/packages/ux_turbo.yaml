@@ -1,0 +1,4 @@
+# Turbo-friendly defaults: header-only CSRF checks break classic HTML login forms.
+framework:
+    csrf_protection:
+        check_header: false

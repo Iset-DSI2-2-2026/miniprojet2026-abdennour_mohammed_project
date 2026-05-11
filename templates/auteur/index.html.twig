@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Auteurs{% endblock %}
+{% block page_title %}Auteurs{% endblock %}
+
+{% block body %}
+    <p><a href="{{ path('app_auteur_nouveau') }}" class="btn btn-primary">Nouvel auteur</a></p>
+    <div class="card">
+        <div class="card-header">Liste ({{ auteurs.totalItemCount }})</div>
+        <div class="card-body table-responsive p-0">
+            <table class="table table-striped mb-0">
+                <thead>
+                <tr><th>Nom</th><th>Prénom</th><th>Nationalité</th></tr>
+                </thead>
+                <tbody>
+                {% for auteur in auteurs %}
+                    <tr>
+                        <td>{{ auteur.nom }}</td>
+                        <td>{{ auteur.prenom }}</td>
+                        <td>{{ auteur.nationalite }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="card-footer">{{ knp_pagination_render(auteurs) }}</div>
+    </div>
+{% endblock %}

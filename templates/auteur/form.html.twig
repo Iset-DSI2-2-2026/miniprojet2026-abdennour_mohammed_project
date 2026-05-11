@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ titre_page }}{% endblock %}
+{% block page_title %}{{ titre_page }}{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_row(form.nom) }}
+    {{ form_row(form.prenom) }}
+    {{ form_row(form.biographie) }}
+    {{ form_row(form.nationalite) }}
+    <div class="mt-3">{{ form_row(form.save) }}</div>
+    {{ form_end(form) }}
+{% endblock %}
